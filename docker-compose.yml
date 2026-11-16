@@ -1,0 +1,60 @@
+# Mini cluster: HDFS (1 namenode + 2 datanodes) + Spark (1 master + 2 workers)
+services:
+  namenode:
+    image: bde2020/hadoop-namenode:2.0.0-hadoop3.2.1-java8
+    container_name: namenode
+    environment:
+      - CLUSTER_NAME=bda
+      - HDFS_CONF_dfs_permissions_enabled=false
+      - CORE_CONF_fs_defaultFS=hdfs://namenode:9000
+      - HDFS_CONF_dfs_replication=2
+      - HDFS_CONF_dfs_blocksize=67108864   # 64 MB blocks
+    ports: ["9870:9870", "9000:9000"]
+    volumes:
+      - nn:/hadoop/dfs/name
+      - ./data:/data                        # put Netflix files in ./data
+  datanode1:
+    image: bde2020/hadoop-datanode:2.0.0-hadoop3.2.1-java8
+    container_name: datanode1
+    environment:
+      - CORE_CONF_fs_defaultFS=hdfs://namenode:9000
+      - HDFS_CONF_dfs_replication=2
+    depends_on: [namenode]
+    volumes: [dn1:/hadoop/dfs/data]
+  datanode2:
+    image: bde2020/hadoop-datanode:2.0.0-hadoop3.2.1-java8
+    container_name: datanode2
+    environment:
+      - CORE_CONF_fs_defaultFS=hdfs://namenode:9000
+      - HDFS_CONF_dfs_replication=2
+    depends_on: [namenode]
+    volumes: [dn2:/hadoop/dfs/data]
+  spark-master:
+    image: bitnamilegacy/spark:3.5
+    user: root
+    container_name: spark-master
+    environment:
+      - SPARK_MODE=master
+    ports: ["8080:8080", "7077:7077"]
+    volumes: [./code:/code]
+  spark-worker1:
+    image: bitnamilegacy/spark:3.5
+    user: root
+    container_name: spark-worker1
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER_URL=spark://spark-master:7077
+      - SPARK_WORKER_MEMORY=2G
+      - SPARK_WORKER_CORES=2
+    depends_on: [spark-master]
+  spark-worker2:
+    image: bitnamilegacy/spark:3.5
+    user: root
+    container_name: spark-worker2
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER_URL=spark://spark-master:7077
+      - SPARK_WORKER_MEMORY=2G
+      - SPARK_WORKER_CORES=2
+    depends_on: [spark-master]
+volumes: {nn: {}, dn1: {}, dn2: {}}
