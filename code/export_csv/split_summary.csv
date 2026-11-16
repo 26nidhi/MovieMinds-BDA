@@ -1,0 +1,2 @@
+user_pct,total,train,val,test,test_unseen_user,test_unseen_movie
+2,1974845,1577648,198422,198775,89464,4257

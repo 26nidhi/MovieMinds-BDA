@@ -1,0 +1,6 @@
+rule,val_rmse
+fixed 0.5,0.9796313298304241
+by user history,0.9752587766880643
+by movie popularity,0.9791042960786082
+by content evidence,0.9784150253783941
+user history x popularity,0.9734992693448494

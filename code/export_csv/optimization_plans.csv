@@ -1,0 +1,97 @@
+name,plan
+join: broadcast hash join,"*(3) HashAggregate(keys=[_groupingexpression#2351L], functions=[count(1), avg(rating#2)], output=[decade#2343L, n#2344L, avg_rating#2345])
++- Exchange hashpartitioning(_groupingexpression#2351L, 64), ENSURE_REQUIREMENTS, [plan_id=1511]
+   +- *(2) HashAggregate(keys=[_groupingexpression#2351L], functions=[partial_count(1), partial_avg(rating#2)], output=[_groupingexpression#2351L, count#2355L, sum#2356, count#2357L])
+      +- *(2) Project [rating#2, ((cast(release_year#40 as bigint) div 10) * 10) AS _groupingexpression#2351L]
+         +- *(2) BroadcastHashJoin [movie_id#0], [movie_id#35], Inner, BuildRight, false
+            :- *(2) Project [movie_id#0, rating#2]
+            :  +- *(2) Filter isnotnull(movie_id#0)
+            :     +- *(2) ColumnarToRow
+            :        +- FileScan parquet [movie_id#0,rating#2,year#4,month#5] Batched: true, DataFilters: [isnotnull(movie_id#0)], Format: Parquet, Location: InMemoryFileIndex(1 paths)[hdfs://namenode:9000/netflix/parquet/ratings], PartitionFilters: [], PushedFilters: [IsNotNull(movie_id)], ReadSchema: struct<movie_id:int,rating:int>
+            +- BroadcastExchange HashedRelationBroadcastMode(List(cast(input[0, int, true] as bigint)),false), [plan_id=1505]
+               +- *(1) Project [movie_id#35, CASE WHEN NOT (year_s#36 = NULL) THEN cast(year_s#36 as int) END AS release_year#40]
+                  +- *(1) Project [cast(regexp_extract(_c0#33, ^(\d+),([^,]*),(.*)$, 1) as int) AS movie_id#35, regexp_extract(_c0#33, ^(\d+),([^ ...[cut]"
+join: sort-merge join,"*(6) HashAggregate(keys=[_groupingexpression#2438L], functions=[count(1), avg(rating#2)], output=[decade#2430L, n#2431L, avg_rating#2432])
++- Exchange hashpartitioning(_groupingexpression#2438L, 64), ENSURE_REQUIREMENTS, [plan_id=2029]
+   +- *(5) HashAggregate(keys=[_groupingexpression#2438L], functions=[partial_count(1), partial_avg(rating#2)], output=[_groupingexpression#2438L, count#2442L, sum#2443, count#2444L])
+      +- *(5) Project [rating#2, ((cast(release_year#40 as bigint) div 10) * 10) AS _groupingexpression#2438L]
+         +- *(5) SortMergeJoin [movie_id#0], [movie_id#35], Inner
+            :- *(2) Sort [movie_id#0 ASC NULLS FIRST], false, 0
+            :  +- Exchange hashpartitioning(movie_id#0, 64), ENSURE_REQUIREMENTS, [plan_id=2010]
+            :     +- *(1) Project [movie_id#0, rating#2]
+            :        +- *(1) Filter isnotnull(movie_id#0)
+            :           +- *(1) ColumnarToRow
+            :              +- FileScan parquet [movie_id#0,rating#2,year#4,month#5] Batched: true, DataFilters: [isnotnull(movie_id#0)], Format: Parquet, Location: InMemoryFileIndex(1 paths)[hdfs://namenode:9000/netflix/parquet/ratings], PartitionFilters: [], PushedFilters: [IsNotNull(movie_id)], ReadSchema: struct<movie_id:int,rating:int>
+            +- *(4) Sort [movie_id#35 ASC NULLS FIRST], false, 0
+               +- Exchange hashpartitioning(movie_id#35, 64), ENSURE_REQUIREMENTS, [plan_id=2020]
+                  +- *(3) Project [movie_id#35, CASE WHEN NOT (year_s#36 = N ...[cut]"
+join: shuffled hash join,"*(4) HashAggregate(keys=[_groupingexpression#2525L], functions=[count(1), avg(rating#2)], output=[decade#2517L, n#2518L, avg_rating#2519])
++- Exchange hashpartitioning(_groupingexpression#2525L, 64), ENSURE_REQUIREMENTS, [plan_id=2663]
+   +- *(3) HashAggregate(keys=[_groupingexpression#2525L], functions=[partial_count(1), partial_avg(rating#2)], output=[_groupingexpression#2525L, count#2529L, sum#2530, count#2531L])
+      +- *(3) Project [rating#2, ((cast(release_year#40 as bigint) div 10) * 10) AS _groupingexpression#2525L]
+         +- *(3) ShuffledHashJoin [movie_id#0], [movie_id#35], Inner, BuildRight
+            :- Exchange hashpartitioning(movie_id#0, 64), ENSURE_REQUIREMENTS, [plan_id=2650]
+            :  +- *(1) Project [movie_id#0, rating#2]
+            :     +- *(1) Filter isnotnull(movie_id#0)
+            :        +- *(1) ColumnarToRow
+            :           +- FileScan parquet [movie_id#0,rating#2,year#4,month#5] Batched: true, DataFilters: [isnotnull(movie_id#0)], Format: Parquet, Location: InMemoryFileIndex(1 paths)[hdfs://namenode:9000/netflix/parquet/ratings], PartitionFilters: [], PushedFilters: [IsNotNull(movie_id)], ReadSchema: struct<movie_id:int,rating:int>
+            +- Exchange hashpartitioning(movie_id#35, 64), ENSURE_REQUIREMENTS, [plan_id=2657]
+               +- *(2) Project [movie_id#35, CASE WHEN NOT (year_s#36 = NULL) THEN cast(year_s#36 as int) END AS release_year#40]
+                  +- *(2) Project [cast(regexp_extract(_c0#33, ^(\d+),([^,]*), ...[cut]"
+"aqe: AQE off, 200 partitions","*(2) HashAggregate(keys=[user_id#1], functions=[count(1), avg(rating#2)], output=[user_id#1, n#2604L, a#2605])
++- Exchange hashpartitioning(user_id#1, 200), ENSURE_REQUIREMENTS, [plan_id=3175]
+   +- *(1) HashAggregate(keys=[user_id#1], functions=[partial_count(1), partial_avg(rating#2)], output=[user_id#1, count#2614L, sum#2615, count#2616L])
+      +- *(1) Project [user_id#1, rating#2]
+         +- *(1) ColumnarToRow
+            +- FileScan parquet [user_id#1,rating#2,year#4,month#5] Batched: true, DataFilters: [], Format: Parquet, Location: InMemoryFileIndex(1 paths)[hdfs://namenode:9000/netflix/parquet/ratings], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<user_id:int,rating:int>
+"
+"aqe: AQE off, 2000 partitions","*(2) HashAggregate(keys=[user_id#1], functions=[count(1), avg(rating#2)], output=[user_id#1, n#2678L, a#2679])
++- Exchange hashpartitioning(user_id#1, 2000), ENSURE_REQUIREMENTS, [plan_id=3393]
+   +- *(1) HashAggregate(keys=[user_id#1], functions=[partial_count(1), partial_avg(rating#2)], output=[user_id#1, count#2688L, sum#2689, count#2690L])
+      +- *(1) Project [user_id#1, rating#2]
+         +- *(1) ColumnarToRow
+            +- FileScan parquet [user_id#1,rating#2,year#4,month#5] Batched: true, DataFilters: [], Format: Parquet, Location: InMemoryFileIndex(1 paths)[hdfs://namenode:9000/netflix/parquet/ratings], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<user_id:int,rating:int>
+"
+"aqe: AQE on,  200 partitions","AdaptiveSparkPlan isFinalPlan=false
++- HashAggregate(keys=[user_id#1], functions=[count(1), avg(rating#2)], output=[user_id#1, n#2752L, a#2753])
+   +- Exchange hashpartitioning(user_id#1, 200), ENSURE_REQUIREMENTS, [plan_id=3600]
+      +- HashAggregate(keys=[user_id#1], functions=[partial_count(1), partial_avg(rating#2)], output=[user_id#1, count#2762L, sum#2763, count#2764L])
+         +- Project [user_id#1, rating#2]
+            +- FileScan parquet [user_id#1,rating#2,year#4,month#5] Batched: true, DataFilters: [], Format: Parquet, Location: InMemoryFileIndex(1 paths)[hdfs://namenode:9000/netflix/parquet/ratings], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<user_id:int,rating:int>
+"
+"aqe: AQE on,  2000 partitions","AdaptiveSparkPlan isFinalPlan=false
++- HashAggregate(keys=[user_id#1], functions=[count(1), avg(rating#2)], output=[user_id#1, n#2832L, a#2833])
+   +- Exchange hashpartitioning(user_id#1, 2000), ENSURE_REQUIREMENTS, [plan_id=3831]
+      +- HashAggregate(keys=[user_id#1], functions=[partial_count(1), partial_avg(rating#2)], output=[user_id#1, count#2842L, sum#2843, count#2844L])
+         +- Project [user_id#1, rating#2]
+            +- FileScan parquet [user_id#1,rating#2,year#4,month#5] Batched: true, DataFilters: [], Format: Parquet, Location: InMemoryFileIndex(1 paths)[hdfs://namenode:9000/netflix/parquet/ratings], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<user_id:int,rating:int>
+"
+bucketing: not bucketed,"*(6) HashAggregate(keys=[], functions=[count(1), avg((cast(rating#2 as double) - avg_rating#2914))], output=[n#2994L, dev#2995])
++- Exchange SinglePartition, ENSURE_REQUIREMENTS, [plan_id=4274]
+   +- *(5) HashAggregate(keys=[], functions=[partial_count(1), partial_avg((cast(rating#2 as double) - avg_rating#2914))], output=[count#3003L, sum#3004, count#3005L])
+      +- *(5) Project [rating#2, avg_rating#2914]
+         +- *(5) SortMergeJoin [movie_id#0], [movie_id#2912], Inner
+            :- *(2) Sort [movie_id#0 ASC NULLS FIRST], false, 0
+            :  +- Exchange hashpartitioning(movie_id#0, 64), ENSURE_REQUIREMENTS, [plan_id=4256]
+            :     +- *(1) Project [movie_id#0, rating#2]
+            :        +- *(1) Filter isnotnull(movie_id#0)
+            :           +- *(1) ColumnarToRow
+            :              +- FileScan parquet [movie_id#0,rating#2,year#4,month#5] Batched: true, DataFilters: [isnotnull(movie_id#0)], Format: Parquet, Location: InMemoryFileIndex(1 paths)[hdfs://namenode:9000/netflix/parquet/ratings], PartitionFilters: [], PushedFilters: [IsNotNull(movie_id)], ReadSchema: struct<movie_id:int,rating:int>
+            +- *(4) Sort [movie_id#2912 ASC NULLS FIRST], false, 0
+               +- Exchange hashpartitioning(movie_id#2912, 64), ENSURE_REQUIREMENTS, [plan_id=4265]
+                  +- *(3) Filter isnotnull(movie_id#2912)
+                     +- *(3) ColumnarToRow
+                        +- FileScan parquet [movie_id#2912,avg_rating#2914] Batched: tru ...[cut]"
+bucketing: bucketed,"*(4) HashAggregate(keys=[], functions=[count(1), avg((cast(rating#3072 as double) - avg_rating#3074))], output=[n#3068L, dev#3069])
++- Exchange SinglePartition, ENSURE_REQUIREMENTS, [plan_id=4966]
+   +- *(3) HashAggregate(keys=[], functions=[partial_count(1), partial_avg((cast(rating#3072 as double) - avg_rating#3074))], output=[count#3083L, sum#3084, count#3085L])
+      +- *(3) Project [rating#3072, avg_rating#3074]
+         +- *(3) SortMergeJoin [movie_id#3071], [movie_id#3073], Inner
+            :- *(1) Sort [movie_id#3071 ASC NULLS FIRST], false, 0
+            :  +- *(1) Filter isnotnull(movie_id#3071)
+            :     +- *(1) ColumnarToRow
+            :        +- FileScan parquet spark_catalog.default.ratings_b[movie_id#3071,rating#3072] Batched: true, Bucketed: true, DataFilters: [isnotnull(movie_id#3071)], Format: Parquet, Location: InMemoryFileIndex(1 paths)[hdfs://namenode:9000/netflix/warehouse/ratings_b], PartitionFilters: [], PushedFilters: [IsNotNull(movie_id)], ReadSchema: struct<movie_id:int,rating:int>, SelectedBucketsCount: 64 out of 64
+            +- *(2) Sort [movie_id#3073 ASC NULLS FIRST], false, 0
+               +- *(2) Filter isnotnull(movie_id#3073)
+                  +- *(2) ColumnarToRow
+                     +- FileScan parquet spark_catalog.default.stats_b[movie_id#3073,avg_rating#3074] Batched: true, Bucketed: true, DataFilters: [isnotnull(movie_id#3073)], Format: Parquet, Location: InMemoryFileIndex(1 paths)[hdfs://namenode:9000/netflix/warehouse/ ...[cut]"

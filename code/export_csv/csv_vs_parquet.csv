@@ -1,0 +1,7 @@
+query,format,median_seconds
+avg rating per movie,CSV,118.0
+avg rating per movie,Parquet,16.1
+rating histogram,CSV,135.3
+rating histogram,Parquet,5.0
+count where year=2005,CSV,134.5
+count where year=2005,Parquet,0.9

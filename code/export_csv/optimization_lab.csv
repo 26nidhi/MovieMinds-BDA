@@ -1,0 +1,16 @@
+experiment,variant,first_run_s,median_s,detail
+cache full data,no cache,19.3,9.3,
+cache full data,MEMORY_ONLY,157.8,16.5,"cached 7/7 partitions, mem 452MB, disk 0MB"
+cache full data,MEMORY_AND_DISK,199.7,53.4,"cached 7/7 partitions, mem 452MB, disk 0MB"
+cache 20% sample,no cache,104.9,52.3,
+cache 20% sample,MEMORY_ONLY,416.5,21.5,"cached 7/7 partitions, mem 106MB, disk 0MB"
+cache 20% sample,MEMORY_AND_DISK,260.6,16.8,"cached 7/7 partitions, mem 106MB, disk 0MB"
+join strategy,broadcast hash join,138.0,91.9,plan confirms BroadcastHashJoin
+join strategy,sort-merge join,443.3,134.4,plan confirms SortMergeJoin
+join strategy,shuffled hash join,46.1,112.0,plan confirms ShuffledHashJoin
+aqe,"AQE off, 200 partitions",100.8,105.7,
+aqe,"AQE off, 2000 partitions",152.8,166.5,
+aqe,"AQE on,  200 partitions",126.2,90.6,
+aqe,"AQE on,  2000 partitions",120.2,95.9,
+bucketing,not bucketed (shuffle join),120.8,128.9,Exchange nodes in plan: 3
+bucketing,bucketed by movie_id (no shuffle),218.9,84.3,Exchange nodes in plan: 1; one-time write 244s

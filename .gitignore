@@ -18,3 +18,9 @@ Thumbs.db
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Per-user rows derived from the Netflix Prize data: not for the public repo
+code/export_csv/rec_candidates.csv
+code/export_csv/rec_users.csv
+code/export_csv/user_stats.csv
+code/export_csv/top_users.csv

@@ -1,0 +1,7 @@
+metric,value
+users,480189.0
+ratings,100480507.0
+median_ratings_per_user,97.0
+p90_ratings_per_user,540.0
+p99_ratings_per_user,1386.0
+share_of_ratings_from_top_1pct_users,0.0916

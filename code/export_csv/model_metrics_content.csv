@@ -1,0 +1,5 @@
+model,rmse,coverage
+"user+movie bias, all pairs",0.9827653730264205,1.0
+"content kNN, covered pairs",0.8960845194174945,0.23463212174569237
+bias on the same covered pairs,0.90035072513225,0.23463212174569237
+"content kNN + bias fallback, all pairs",0.9818500734240484,1.0

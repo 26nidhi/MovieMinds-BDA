@@ -1,0 +1,9 @@
+matched,method,movies,seconds
+,lsh_build_tmdb_once,133971,20.3
+317,naive_levenshtein,500,106.4
+321,lsh_join_only,500,31.0
+659,naive_levenshtein,1000,197.6
+668,lsh_join_only,1000,26.5
+1264,naive_levenshtein,2000,351.9
+1264,lsh_join_only,2000,44.0
+3209,lsh_join_only,5000,92.1
