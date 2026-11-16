@@ -1,0 +1,94 @@
+{
+  "_note": "Numbers measured on our own cluster and copied from the terminal outputs of the earlier steps. Everything else in the dashboard is read from the Spark result tables.",
+  "storage": {
+    "raw_gb": 1.9,
+    "csv_gb": 3.1,
+    "parquet_mb": 474.5,
+    "block_mb": 64,
+    "replication": 2,
+    "datanodes": 2,
+    "workers": 2,
+    "cores_total": 4
+  },
+  "matching": {
+    "netflix_movies": 17770,
+    "tmdb_catalogue": 133971,
+    "exact": 10634,
+    "fuzzy": 785,
+    "matched": 11419,
+    "precision": null
+  },
+  "spark_vs_pandas": {
+    "spark_4cores": [
+      {
+        "rows": 1628976,
+        "seconds": 5.1
+      },
+      {
+        "rows": 13296979,
+        "seconds": 7.1
+      },
+      {
+        "rows": 57085384,
+        "seconds": 22.1
+      },
+      {
+        "rows": 100480507,
+        "seconds": 25.8
+      }
+    ],
+    "pandas_2gb": [
+      {
+        "rows": 1628976,
+        "seconds": 6.3,
+        "peak_mb": 253,
+        "status": "ok"
+      },
+      {
+        "rows": 13296979,
+        "seconds": 36.5,
+        "peak_mb": 721,
+        "status": "ok"
+      },
+      {
+        "rows": 57085384,
+        "seconds": null,
+        "peak_mb": null,
+        "status": "killed (out of memory)"
+      },
+      {
+        "rows": 100480507,
+        "seconds": null,
+        "peak_mb": null,
+        "status": "killed (out of memory)"
+      }
+    ]
+  },
+  "scaling_full_data_runs": {
+    "1": [
+      53.6,
+      38.9,
+      35.2,
+      39.5
+    ],
+    "2": [
+      32.3,
+      48.4,
+      43.0,
+      51.0
+    ],
+    "4": [
+      117.4,
+      38.8,
+      25.8,
+      40.1,
+      51.2,
+      46.7
+    ]
+  },
+  "ranking": {
+    "all_candidates": 17012,
+    "pool": 1000,
+    "users": 1000
+  }
+}
